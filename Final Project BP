@@ -6,6 +6,9 @@ import java.time.format.DateTimeFormatter;
 
 public class finalProject2{
     
+    
+    // Variabel untuk total pemasukan
+      static int totalPemasukan = 0;
       static int mCari(String data[], String kata) {
         for (int i = 0; i < data.length; i++) {
             if (data[i] != null && data[i].equalsIgnoreCase(kata)) {
@@ -30,7 +33,7 @@ public class finalProject2{
        Menu[1] = "Liwet Tongkol Spesial"; Harga[1] = 21000;
        Menu[2] = "Liwet Teri"; Harga[2] = 15000;
        Menu[3] = "Ayam Geprek"; Harga[3] = 15000;
-       Menu[4] = "Es Teh"; Harga[4] = 6000;
+       Menu[4] = "Es Teh\t"; Harga[4] = 6000;
        Menu[5] = "Teh Hangat"; Harga[5] = 5000;
        
        //array untuk pembelian
@@ -68,21 +71,82 @@ public class finalProject2{
                        
                        switch (pilihKasir) {
                            case 1:
-                               // Pesanan makanan
-                               System.out.print("Pilih Menu: ");
-                               int pilih = sc.nextInt();
-                               System.out.print("Jumlah Porsi: ");
-                               porsi[idx] = sc.nextInt();
-                               menu[idx] = Menu[(pilih - 1)];
-                               harga[idx] = Harga[(pilih - 1)];
+                               int pilih;
+                                do {
+                                    // Tampilkan menu
+                                    System.out.println("\nDaftar Menu");
+                                    for (int i = 0; i < jumlah; i++) {
+                                        System.out.print((i + 1) + ". " + Menu[i]);
+                                        System.out.println(" [" + Harga[i] + "]");
+                                    }
 
-                               int total = porsi[idx] * harga[idx];
-                               System.out.println("Satuan porsi: " + harga[idx]);
-                               System.out.println("Total       : " + total);
+                                    System.out.println("0. Selesai Memesan");
+                                    System.out.print("Pilih Menu (0 untuk selesai): ");
+                                    pilih = sc.nextInt();
 
-                               idx++;
-                               break;
+                                    if (pilih > 0 && pilih <= jumlah) {
+                                        // Input jumlah porsi
+                                        System.out.print("Jumlah Porsi: ");
+                                        porsi[idx] = sc.nextInt();
 
+                                        // Simpan data pesanan
+                                        menu[idx] = Menu[pilih - 1];
+                                        harga[idx] = Harga[pilih - 1];
+
+                                        // Hitung total harga untuk item ini
+                                        int total = porsi[idx] * harga[idx];
+                                        System.out.println("Satuan porsi: " + harga[idx]);
+                                        System.out.println("Total       : " + total);
+
+                                        idx++; // Pindah ke indeks berikutnya untuk pesanan baru
+                                    } else if (pilih != 0) {
+                                        System.out.println("Menu tidak valid. Silakan pilih lagi.");
+                                    }
+
+                                } while (pilih != 0);
+                                
+                                // List daftar pesanan
+                                System.out.println("                     \nDaftar Pembelian                          ");
+                                System.out.println("-----------------------------------------------------------------");
+                                System.out.println("No\tMenu\t\tHarga\tqty\tTotal");
+                                for (int i = 0; i < idx; i++) {
+                                    if (menu[i] != null) { // Hanya tampilkan data yang tidak null
+                                        System.out.print((i + 1) + "\t" + menu[i]);
+                                        System.out.print("\t" + harga[i]);
+                                        System.out.print("\t" + porsi[i]);
+                                        System.out.println("\t" + harga[i] * porsi[i]);
+                                    }
+                                }
+
+                                // Menghitung grand total
+                                int grandTotal = 0;
+                                for (int i = 0; i <= idx - 1; i++) {
+                                    grandTotal += harga[i] * porsi[i];
+                                }
+
+                                System.out.println("-----------------------------------------------------------------");
+                                System.out.println("                                        Grand Total : " + grandTotal);
+
+                                // Menambahkan ke total pemasukan
+                                totalPemasukan += grandTotal;
+
+                                int uangTunai;
+                                do {
+                                    // Input uang tunai
+                                    System.out.print("Masukkan jumlah uang tunai: ");
+                                    uangTunai = sc.nextInt();
+
+                                    if (uangTunai < grandTotal) {
+                                        System.out.println("Uang tunai kurang! Total yang harus dibayar: " + grandTotal);
+                                        System.out.println("Silakan masukkan jumlah yang mencukupi.");
+                                    }
+
+                                } while (uangTunai < grandTotal); // Ulangi input jika uang kurang
+
+                                // Menghitung kembalian
+                                int kembalian = uangTunai - grandTotal;
+                                System.out.println("Kembalian               : " + kembalian);
+                                break;
 
                            case 2:
                                // Mengurutkan menu berdasarkan nama
@@ -133,37 +197,8 @@ public class finalProject2{
                                break;
 
                            case 4:
-                               // List daftar pesanan
-                               System.out.println("                     \nDaftar Pembelian                          ");
-                               System.out.println("-----------------------------------------------------------------");
-                               System.out.println("No\tMenu\t\tHarga\tqty\tTotal");
-                               for (int i = 0; i < idx; i++) {
-                            if (menu[i] != null) { // Hanya tampilkan data yang tidak null
-                                System.out.print((i + 1) + "\t" + menu[i]);
-                                System.out.print("\t" + harga[i]);
-                                System.out.print("\t" + porsi[i]);
-                                System.out.println("\t" + harga[i] * porsi[i]);
-                                }
-                            }
-
-
-                               // Menghitung grand total
-                               int grandTotal = 0;
-                               for (int i = 0; i <= idx-1; i++) {
-                                   grandTotal += harga[i] * porsi[i];
-                               }
-
-                               System.out.println("-----------------------------------------------------------------");
-                               System.out.println("                                        Grand Total : " + grandTotal);
-
-                               // Input uang tunai
-                               System.out.print("Masukkan jumlah uang tunai: ");
-                               int uangTunai = sc.nextInt();
-
-                               // Menghitung kembalian
-                               int kembalian = uangTunai - grandTotal;
-                               System.out.println("Kembalian               : " + kembalian);
                                break;
+                               
 
 
                            default:
@@ -178,6 +213,7 @@ public class finalProject2{
                    System.out.println("1.Tambah Menu");
                    System.out.println("2.Hapus Menu");
                    System.out.println("3.Ubah Menu");
+                   System.out.println("4.Ubah Harga");
                    System.out.print("Pilih : ");
                    int pilih2 = sc.nextInt();
                    switch(pilih2){
@@ -229,59 +265,71 @@ public class finalProject2{
                                 System.out.println("Menu berhasil diubah!");
                             }
                             break;
+                        case 4:
+                            // Ubah Harga Menu
+                            sc.nextLine(); // Membersihkan buffer input
+                            System.out.print("Nama menu yang ingin diubah harganya: ");
+                            String menuUbahHarga = sc.nextLine();
+                            int idk4 = mCari(Menu, menuUbahHarga);
 
+                            if (idk4 == -1) {
+                                System.out.println("Menu tidak ditemukan!");
+                            } else {
+                                System.out.print("Harga baru untuk " + Menu[idk4] + ": ");
+                                Harga[idk4] = sc.nextInt();
+                                System.out.println("Harga berhasil diubah!");
+                            }
+                            break;
 
                    }
                    break;
-               case 3:
-                    System.out.println("\nUSER OWNER");
-                    LocalDateTime now = LocalDateTime.now();
-                    DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-                    System.out.println("Laporan dibuat pada: " + now.format(format));
-                    // Menghitung total pemasukan dari transaksi
-                    int totalPemasukan = 0;
-                    for (int i = 0; i < idx; i++) {
-                        totalPemasukan += harga[i] * porsi[i];
-                    }
-                    System.out.println("Total pemasukan: " + totalPemasukan);
-                    
-                    // Menghitung jumlah terjual per menu
-                    int[] jumlahTerjual = new int[jumlah]; // Array untuk menyimpan jumlah terjual
-                    for (int i = 0; i < jumlah; i++) {
-                        for (int j = 0; j < idx; j++) {
-                            if (Menu[i].equalsIgnoreCase(menu[j])) {
-                                jumlahTerjual[i] += porsi[j];
-                            }
-                        }
-                    }
+                 case 3:
+                     System.out.println("\nUSER OWNER");
+                     LocalDateTime now = LocalDateTime.now();
+                     DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+                     System.out.println("Laporan dibuat pada: " + now.format(format));
 
-                    // Mengurutkan menu berdasarkan jumlah terjual 
-                    for (int i = 0; i < jumlah; i++) {
-                        for (int j = i + 1; j < jumlah; j++) {
-                            if (jumlahTerjual[i] < jumlahTerjual[j]) {
-                                // Tukar jumlah terjual
-                                int tempJumlah = jumlahTerjual[i];
-                                jumlahTerjual[i] = jumlahTerjual[j];
-                                jumlahTerjual[j] = tempJumlah;
+                     // Menampilkan total pemasukan
+                     System.out.println("Total pemasukan selama transaksi: " + totalPemasukan);
 
-                                // Tukar menu dan harga
-                                String tempMenu = Menu[i];
-                                Menu[i] = Menu[j];
-                                Menu[j] = tempMenu;
+                     // Menghitung jumlah terjual per menu
+                     int[] jumlahTerjual = new int[jumlah]; // Array untuk menyimpan jumlah terjual
+                     for (int i = 0; i < jumlah; i++) {
+                         for (int j = 0; j < idx; j++) {
+                             if (Menu[i].equalsIgnoreCase(menu[j])) {
+                                 jumlahTerjual[i] += porsi[j];
+                             }
+                         }
+                     }
 
-                                int tempHarga = Harga[i];
-                                Harga[i] = Harga[j];
-                                Harga[j] = tempHarga;
-                            }
-                        }
-                    }
+                     // Mengurutkan menu berdasarkan jumlah terjual
+                     for (int i = 0; i < jumlah; i++) {
+                         for (int j = i + 1; j < jumlah; j++) {
+                             if (jumlahTerjual[i] < jumlahTerjual[j]) {
+                                 // Tukar jumlah terjual
+                                 int tempJumlah = jumlahTerjual[i];
+                                 jumlahTerjual[i] = jumlahTerjual[j];
+                                 jumlahTerjual[j] = tempJumlah;
 
-                    // Menampilkan daftar 5 menu terlaris
-                    System.out.println("\nDaftar 5 menu terlaris:");
-                    for (int i = 0; i < Math.min(5, jumlah); i++) {
-                        System.out.println((i + 1) + ". " + Menu[i] + " (Terjual: " + jumlahTerjual[i] + ")");
-                    }
-                    break;
+                                 // Tukar menu dan harga
+                                 String tempMenu = Menu[i];
+                                 Menu[i] = Menu[j];
+                                 Menu[j] = tempMenu;
+
+                                 int tempHarga = Harga[i];
+                                 Harga[i] = Harga[j];
+                                 Harga[j] = tempHarga;
+                             }
+                         }
+                     }
+
+                     // Menampilkan daftar 5 menu terlaris
+                     System.out.println("\nDaftar 5 menu terlaris:");
+                     for (int i = 0; i < Math.min(5, jumlah); i++) {
+                         System.out.println((i + 1) + ". " + Menu[i] + " (Terjual: " + jumlahTerjual[i] + ")");
+                     }
+                     break;
+
                    
                case 4:
                    System.out.println("thanks");
